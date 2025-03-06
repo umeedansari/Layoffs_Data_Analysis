@@ -170,6 +170,9 @@ plt.show()
 * Acquisition: Flipkart was acquired, representing a different funding path.
 * Funding Amounts Differ: Total funds raised vary significantly across companies.
 
+## Conclusion 
+In summary, the analysis of layoffs reveals varying impacts across industries, with the food sector facing the highest layoffs and healthcare showing resilience. Layoffs fluctuated throughout the year, peaking in January and November while dipping mid-year. Companies employed diverse fundraising strategies, reflecting varied approaches to financial stability. These trends emphasize the need for adaptability in navigating economic challenges.
+
 
 
 
