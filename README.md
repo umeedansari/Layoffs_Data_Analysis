@@ -1,18 +1,14 @@
 
 <p align="center">
-  
+  <img width="1248" height="322" alt="image" src="https://github.com/user-attachments/assets/ae6e8d2d-8875-4ec0-81b0-91bb92b9c206" />
 </p>
-
-# 📉 Layoffs Data Analysis
 
 
 # 📉 Layoffs Data Analysis
 
 An exploratory data analysis (EDA) of global company layoffs from **2020 to 2023**, built with Python. The project cleans a raw layoffs dataset and uses visualizations to explore **where, when, and in which industries** layoffs happened, and whether **funding** or **company stage** had any relationship with them.
 
-<p align="center">
-  <img src="images/dashboard_preview.png" alt="Dashboard preview of all key charts" width="100%">
-</p>
+
 
 ---
 
