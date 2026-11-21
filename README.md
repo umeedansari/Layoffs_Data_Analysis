@@ -8,9 +8,6 @@
 
 An exploratory data analysis (EDA) of global company layoffs from **March 2020 to March 2023**, built with Python. The project cleans a raw layoffs dataset and uses visualizations to explore **where, when, and in which industries** layoffs happened, and whether **funding** or **company stage** had any relationship with them.
 
-<p align="center">
-  <img src="images/dashboard_preview.png" alt="Dashboard preview of all key charts" width="100%">
-</p>
 
 ---
 
