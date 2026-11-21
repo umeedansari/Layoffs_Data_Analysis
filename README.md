@@ -1,183 +1,224 @@
-# Overview
 
-Welcome to my analysis of the data layoffs, focusing on the impact of layoffs accross industries. This project was created out of a desire to navigate and understand the job market more effectively. 
+<p align="center">
+  
+</p>
 
-In light of recent layoffs across various industries, this analysis incorporates data on job market trends and the impact of these layoffs . By examining the dataset, I aim to provide a comprehensive understanding of the current job market landscape, highlighting which industry have the highest and more.
+# 📉 Layoffs Data Analysis
 
-# The Questions
 
-Below are the questions I want to answer in my project:
+# 📉 Layoffs Data Analysis
 
-1. How has the percentage of layoffs varied across different industries?
-2. How have layoffs varied throughout the year?
-3. How have companies raised funds from different sources?
+An exploratory data analysis (EDA) of global company layoffs from **2020 to 2023**, built with Python. The project cleans a raw layoffs dataset and uses visualizations to explore **where, when, and in which industries** layoffs happened, and whether **funding** or **company stage** had any relationship with them.
 
-# Tools I Used
+<p align="center">
+  <img src="images/dashboard_preview.png" alt="Dashboard preview of all key charts" width="100%">
+</p>
 
-For my deep dive into the layoffs dataset, I harnessed the power of several key tools:
+---
 
-- **Python:** The backbone of my analysis, allowing me to analyze the data and find critical insights.I also used the following Python libraries:
-    - **Pandas Library:** This was used to analyze the data. 
-    - **Matplotlib Library:** I visualized the data.
-    - **Seaborn Library:** Helped me create more advanced visuals. 
-- **Jupyter Notebooks:** The tool I used to run my Python scripts which let me easily include my notes and analysis.
-- **Git & GitHub:** Essential for version control and sharing my Python code and analysis, ensuring collaboration and project tracking.
+## 🎯 Objectives
 
-# Data Preparation and Cleanup
+- Clean and prepare the raw layoffs dataset
+- Find which countries, cities, industries and companies were hit hardest
+- Understand how layoffs changed over time (yearly and monthly)
+- Compare layoff severity (% of workforce) across industries
+- Check whether funding raised or company stage relates to layoffs
 
-This section outlines the steps taken to prepare the data for analysis, ensuring accuracy and usability.
+---
 
-## Import & Clean Up Data
-
-I start by importing necessary libraries and loading the dataset, followed by initial data cleaning tasks to ensure data quality.
+## 🗂️ Project Structure
 
 ```
-import pandas as pd
-import ast
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
-df=pd.read_csv(r"C:\Users\aumee\Downloads\layoffs.csv")
-```
-For cleanup:
-
-```
-def change(x):
-    if isinstance(x, str) and 'Crypto' in x:
-        return 'Crypto'
-    return x
-df['industry'] = df['industry'].apply(change)
-
-def change2(x):
-    if 'Unknown' in x:
-        return np.nan
-    else :
-        return x
-df['stage']=df['stage'].astype(str).apply(change2)
-
-def change3(x):
-    if 'United States' in x:
-        return 'United States'
-    return x
-df['country'] = df['country'].apply(change3)
-
-df['date']=pd.to_datetime(df['date'])
-
+Layoffs-Data-Analysis/
+│
+├── data/
+│   ├── raw/
+│   │   └── raw_layoff.csv
+│   └── cleaned/
+│       └── layoffs_cleaned.csv
+│
+├── notebooks/
+│   └── layoffs_eda.ipynb
+│
+├── images/                 # All charts exported from the notebook
+│
+├── README.md
+├── requirements.txt
+├── .gitignore
+└── LICENSE
 ```
 
-# The Analysis
+---
 
-Each cell aimed at investigating specific aspects of the data. Here’s how I approached each question:
+## 🔄 Workflow
 
-## 1. How has the percentage of layoffs varied across different industries?
-
-To find the percentage of layoffs across different industries.I identified the top six industries with the highest number of layoffs and filtered the dataset accordingly. Using a boxplot, I visualized the percentage of layoffs in each of these top industries. This helps compare layoff percentages across the top industries at a glance.
-
-### Visualise Data
-
-```
-plot3= df['industry'].value_counts().head(6)
-top_industries = plot3.index.tolist()
-df_filtered = df[df['industry'].isin(top_industries)].copy()
-plt.figure(figsize=(10, 4))
-sns.boxplot(data=df_filtered, x='percentage_laid_off',y='industry',hue='industry',legend=False)
-plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, pos: f'{x*100:.0f}%'))
-plt.ylabel('Industries',size=15)
-plt.xlabel('Percentage',size=15)
-plt.title('Percentage Layoff In Each Industries',size=20)
-plt.show()
+```mermaid
+flowchart LR
+    A[Raw CSV<br/>raw_layoff.csv] --> B[Data Cleaning<br/>industry, stage, dates]
+    B --> C[Cleaned CSV<br/>layoffs_cleaned.csv]
+    C --> D[EDA &<br/>Visualization]
+    D --> E[Insights &<br/>Conclusions]
 ```
 
-### Results:
+---
 
-![Screenshot 2025-02-15 175751](https://github.com/user-attachments/assets/eccfec7c-3966-48f1-b41c-e4731657e7ce)
+## 🧹 Data Cleaning
 
-### Insights:
+| Step | Description |
+|---|---|
+| Industry cleanup | All crypto-related labels were merged into a single `Crypto` category |
+| Stage cleanup | `Unknown` funding stages were replaced with missing values (`NaN`) |
+| Date conversion | The `date` column was converted to `datetime`, then `year` and `month` were extracted |
+| Numeric conversion | `percentage_laid_off` was converted to numeric before plotting |
+| Export | The cleaned data was saved to `data/cleaned/layoffs_cleaned.csv` |
 
-* Varied Impact: Layoff percentages differ significantly across industries.
-* Food Sector High: Food industry shows the highest median layoff percentage.
-* Healthcare Lowest: Healthcare industry has the lowest and most consistent layoff percentages.
-* Mid-Range Variation: Other industries (Retail, Transportation, Marketing, Finance) fall in between with varying degrees of layoff impact.
+---
 
-## 2. How have layoffs varied throughout the year?
+## 🔍 Key Findings
 
-I created a plot to visualize the median total layoffs throughout the year by month. I grouped the data by month, calculated the median number of layoffs, and converted the month numbers to their corresponding names. Using a line plot, I displayed the total layoffs per month, with green lines, red star markers, and no legend. This visualization highlights the monthly trend in layoffs, helping identify patterns across the year.
+> Values below are approximate, read from the charts.
 
-### Visualize Data
+### 🌍 1. Geography
 
-```
-plot4=df.groupby('month')['total_laid_off'].median().reset_index()
-plot['month_name'] = plot['month'].apply(lambda x: pd.to_datetime(x,format='%m').strftime('%b'))
-plot.plot(kind='line',x='month_name',y='total_laid_off',color='green',marker='*',markerfacecolor='red',markersize=10,legend=False)
-plt.title('Total Layoff Throught The Year ',size=20)
-plt.ylabel('No. Of Layoff Per Month',size=15)
-plt.xlabel('Months',size=15)
-```
-### Results:
+- The **United States** leads by a wide margin with about **257,000** layoffs, roughly 7x India (about 35,000), the next highest.
+- The **SF Bay Area** alone accounts for about **127,000**, followed by Seattle (about 34,500) and New York City (about 29,500).
+- **Bengaluru** is the most affected non-US city (about 21,500).
 
-![Screenshot 2025-02-15 181212](https://github.com/user-attachments/assets/33f90366-ead8-4a47-b393-6fef5b43809f)
+![Top Countries](images/top_countries.png)
 
-### Insights:
+![Top Locations](images/top_locations.png)
 
-* Fluctuating Layoffs: Layoffs varied significantly throughout the year.
-* Early Peak: Layoffs started high, peaking in January.
-* Mid-Year Dip:  A significant drop occurred mid-year, reaching a low in July.
-* Late Rise: Layoffs rose again towards the end of the year, peaking in November.
-* Overall Trend:  A U-shaped pattern is observed in the layoff trend.
+### 🏭 2. Industries
 
-## 2. How have companies raised funds from different sources? 
+- **Consumer** (about 46,000) and **Retail** (about 43,000) saw the most layoffs, followed by Other, Transportation, Finance and Healthcare.
+- In **2020**, Travel and Transportation led (COVID impact). In **2022 to 2023**, Consumer, Retail, Healthcare and Finance were hit hardest.
 
-I created a plot to visualize the median funds raised by top companies at different stages. By grouping the data by company and stage, and merging it with industry information. This plot shows the funds raised (in USD) by each company, with different colors representing various industries.This visualization highlights the distribution of funds raised by companies from different sources.
+![Top Industries](images/top_industries.png)
 
-### Visualise Data
+![Industry vs Year Heatmap](images/industry_year_heatmap.png)
 
-```
-plot5 = df.groupby(['company', 'stage'])['funds_raised_millions'].median().sort_values(ascending=False).head(10)[1:].reset_index(name='Funds')
-temp_df = df[['industry', 'company']].drop_duplicates()
-final_plot = plot5.merge(temp_df, how='inner')
+### 🏢 3. Companies
 
-plt.figure(figsize=(10,5))
-sns.scatterplot(data=final_plot, x='Funds', y='company', hue='industry', legend=True)
-plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, pos: f'${int(x / 100)}M'))
+- **Amazon** (about 18,150), **Google** (about 12,000) and **Meta** (about 11,000) top the list.
+- A small number of large companies make up a big share of total layoffs.
 
-from adjustText import adjust_text
-texts = []
+![Top Companies](images/top_companies.png)
 
-for i, row in final_plot.iterrows():
-    company = row['company']
-    stage = row['stage']
-    funds = row['Funds']
-    texts.append(plt.text(funds, company, stage))
+### 📅 4. Time Trends
 
-adjust_text(texts)
-plt.legend(loc='upper left')
-plt.ylabel('Companies' ,size=15)
-plt.xlabel('Funds (USD)' ,size=15)
-plt.title('Funds Raised By Companies From Differenet Sources' ,size=20)
-plt.show()
+- Layoffs: about **81k (2020)**, **15.5k (2021)**, **161.5k (2022)**, **127k (2023)**.
+- Layoffs are highest in **November to January** and lowest around **September**.
+- The median layoff event is largest in **January** (about 104 employees) and smallest in **April** (about 53).
 
-```
+![Yearly Trend](images/yearly_layoff_trend.png)
 
-### Results:
+![Monthly Trend](images/monthly_layoff_trend.png)
 
-![Screenshot 2025-02-15 181826](https://github.com/user-attachments/assets/8e1d91ac-f95d-4854-9121-b3b10b568c93)
+![Monthly Median](images/monthly_median_layoffs.png)
 
-### Insights:
+### 💰 5. Funding Stage
 
-* Funding Sources Varied: Companies raised funds from diverse sources.
-* IPO Common:  Post-IPO funding is prevalent among many companies.
-* Series Funding: WeWork utilized Series H funding rounds.
-* Acquisition: Flipkart was acquired, representing a different funding path.
-* Funding Amounts Differ: Total funds raised vary significantly across companies.
+- **Post-IPO** companies account for about **205,000** layoffs, about 7x the next group (Acquired, about 29,000).
+- Well-funded companies such as Meta, Uber, Tesla and WeWork (each with $20B or more raised) still had layoffs.
 
-## Conclusion 
-In summary, the analysis of layoffs reveals varying impacts across industries, with the food sector facing the highest layoffs and healthcare showing resilience. Layoffs fluctuated throughout the year, peaking in January and November while dipping mid-year. Companies employed diverse fundraising strategies, reflecting varied approaches to financial stability. These trends emphasize the need for adaptability in navigating economic challenges.
+![Layoffs by Stage](images/startup_stage_analysis.png)
 
+![Funds Raised](images/funding_by_stage.png)
 
+### 📊 6. Severity of Layoffs
 
+- Most layoff events cut **about 10 to 20%** of the workforce.
+- About **117 companies laid off 100%** of staff (full shutdowns).
+- Median severity is similar across industries (14 to 20%), but **Food** has the widest spread and **Healthcare** the highest median.
 
+![Percentage Distribution](images/percentage_layoff_distribution.png)
 
+![Percentage by Industry](images/industry_percentage_layoffs.png)
 
- 
+### 🔗 7. Correlation
 
+| Pair | Correlation |
+|---|---|
+| Total laid off vs % laid off | -0.058 |
+| Total laid off vs funds raised | 0.077 |
+| % laid off vs funds raised | -0.068 |
 
+All correlations are close to zero. **Funding raised does not predict how many people, or what share of staff, a company laid off.**
+
+![Correlation Heatmap](images/correlation_heatmap.png)
+
+---
+
+## ✅ Conclusion
+
+Layoffs from 2020 to 2023 were widespread but concentrated: in the **US** (especially the **SF Bay Area**), in **consumer and retail** industries, and among **large, post-IPO companies**. Activity peaked in **2022**, with a clear winter seasonality. Funding showed almost no relationship with layoff size, which suggests layoffs were driven by wider economic conditions and business restructuring rather than a single factor.
+
+---
+
+## ⚠️ Limitations
+
+- `total_laid_off` totals only include rows where the value is available; rows with missing values are ignored.
+- **2023 is likely a partial year**, so it should not be compared directly with full years.
+- Monthly charts **pool all years together**, so spikes (e.g., January) may be driven by a few large events in a single year.
+- The **"Other"** industry category is large and not broken down further.
+- Findings show correlation and patterns, not causation.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Python 3**
+- **pandas**, **NumPy** for data manipulation
+- **Matplotlib**, **Seaborn** for visualization
+- **adjustText** for label placement
+- **Jupyter Notebook**
+
+---
+
+## 🚀 How to Run
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/umeedansari/Layoffs-Data-Analysis.git
+   cd Layoffs-Data-Analysis
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Open the notebook**
+
+   ```bash
+   jupyter notebook notebooks/layoffs_eda.ipynb
+   ```
+
+4. Make sure `data/raw/raw_layoff.csv` exists, then run all cells. Update the file paths in the notebook if needed.
+
+---
+
+## 🔮 Future Work
+
+- Build an interactive dashboard (Power BI, Tableau or Plotly Dash)
+- Break down the "Other" industry category
+- Add predictive modeling for layoff risk
+- Compare layoffs against macroeconomic indicators (interest rates, inflation, stock indices)
+
+---
+
+## 📄 License
+
+This project is licensed under the terms of the [LICENSE](LICENSE) file.
+
+---
+
+## 👤 Author
+
+**Umeed Ansari**
+
+[GitHub](https://github.com/umeedansari) · [LinkedIn](https://linkedin.com/in/umeedansari)
+
+⭐ If you found this project useful, consider giving it a star!
