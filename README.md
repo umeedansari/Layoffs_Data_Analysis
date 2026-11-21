@@ -6,9 +6,11 @@
 
 # 📉 Layoffs Data Analysis
 
-An exploratory data analysis (EDA) of global company layoffs from **2020 to 2023**, built with Python. The project cleans a raw layoffs dataset and uses visualizations to explore **where, when, and in which industries** layoffs happened, and whether **funding** or **company stage** had any relationship with them.
+An exploratory data analysis (EDA) of global company layoffs from **March 2020 to March 2023**, built with Python. The project cleans a raw layoffs dataset and uses visualizations to explore **where, when, and in which industries** layoffs happened, and whether **funding** or **company stage** had any relationship with them.
 
-
+<p align="center">
+  <img src="images/dashboard_preview.png" alt="Dashboard preview of all key charts" width="100%">
+</p>
 
 ---
 
@@ -64,7 +66,7 @@ flowchart LR
 |---|---|
 | Industry cleanup | All crypto-related labels were merged into a single `Crypto` category |
 | Stage cleanup | `Unknown` funding stages were replaced with missing values (`NaN`) |
-| Date conversion | The `date` column was converted to `datetime`, then `year` and `month` were extracted |
+| Date conversion | The `date` column was converted to `datetime` (`year` and `month` were derived later during EDA) |
 | Numeric conversion | `percentage_laid_off` was converted to numeric before plotting |
 | Export | The cleaned data was saved to `data/cleaned/layoffs_cleaned.csv` |
 
@@ -72,11 +74,11 @@ flowchart LR
 
 ## 🔍 Key Findings
 
-> Values below are approximate, read from the charts.
+> Totals by country and year come from the notebook output. Other values are approximate, read from the charts.
 
 ### 🌍 1. Geography
 
-- The **United States** leads by a wide margin with about **257,000** layoffs, roughly 7x India (about 35,000), the next highest.
+- The **United States** leads by a wide margin with about **256,000** layoffs (roughly two-thirds of the **386,000** total), about 7x India (about 36,000), the next highest.
 - The **SF Bay Area** alone accounts for about **127,000**, followed by Seattle (about 34,500) and New York City (about 29,500).
 - **Bengaluru** is the most affected non-US city (about 21,500).
 
@@ -96,14 +98,14 @@ flowchart LR
 ### 🏢 3. Companies
 
 - **Amazon** (about 18,150), **Google** (about 12,000) and **Meta** (about 11,000) top the list.
-- A small number of large companies make up a big share of total layoffs.
+- The top 10 companies together account for roughly a quarter (about 26%) of all layoffs.
 
 ![Top Companies](images/top_companies.png)
 
 ### 📅 4. Time Trends
 
-- Layoffs: about **81k (2020)**, **15.5k (2021)**, **161.5k (2022)**, **127k (2023)**.
-- Layoffs are highest in **November to January** and lowest around **September**.
+- Layoffs: about **81.1k (2020)**, **15.8k (2021)**, **161.7k (2022)**, **127.3k (2023)**. The 2023 figure covers only about two months (January to early March).
+- Total layoffs peak in **January** (about 92k) and **November** (about 56k) and are lowest in **September** (about 7k). December is also low (about 12.5k).
 - The median layoff event is largest in **January** (about 104 employees) and smallest in **April** (about 53).
 
 ![Yearly Trend](images/yearly_layoff_trend.png)
@@ -123,8 +125,8 @@ flowchart LR
 
 ### 📊 6. Severity of Layoffs
 
-- Most layoff events cut **about 10 to 20%** of the workforce.
-- About **117 companies laid off 100%** of staff (full shutdowns).
+- Most layoff events cut roughly **5 to 30%** of the workforce, with the most common level around **10 to 13%**.
+- About **117 companies laid off 100%** of their workforce.
 - Median severity is similar across industries (14 to 20%), but **Food** has the widest spread and **Healthcare** the highest median.
 
 ![Percentage Distribution](images/percentage_layoff_distribution.png)
@@ -147,14 +149,14 @@ All correlations are close to zero. **Funding raised does not predict how many p
 
 ## ✅ Conclusion
 
-Layoffs from 2020 to 2023 were widespread but concentrated: in the **US** (especially the **SF Bay Area**), in **consumer and retail** industries, and among **large, post-IPO companies**. Activity peaked in **2022**, with a clear winter seasonality. Funding showed almost no relationship with layoff size, which suggests layoffs were driven by wider economic conditions and business restructuring rather than a single factor.
+Layoffs from 2020 to 2023 were widespread but concentrated: in the **US** (especially the **SF Bay Area**), in **consumer and retail** industries, and among **large, post-IPO companies**. Activity peaked in **2022**, and monthly totals were largest in **January** and **November**. Funding showed almost no relationship with layoff size, so funding alone does not explain which companies cut jobs.
 
 ---
 
 ## ⚠️ Limitations
 
 - `total_laid_off` totals only include rows where the value is available; rows with missing values are ignored.
-- **2023 is likely a partial year**, so it should not be compared directly with full years.
+- **2023 only covers January to early March** (the data runs from March 2020 to March 2023), so it should not be compared directly with full years.
 - Monthly charts **pool all years together**, so spikes (e.g., January) may be driven by a few large events in a single year.
 - The **"Other"** industry category is large and not broken down further.
 - Findings show correlation and patterns, not causation.
